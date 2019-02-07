@@ -1,8 +1,8 @@
 ## Package Status
 
-| Bintray | Windows | Linux & macOS |
-|:--------:|:---------:|:-----------------:|
-|[![Download](https://api.bintray.com/packages/bincrafters/public-conan/conan-xkbcommon%3Abincrafters/images/download.svg) ](https://bintray.com/bincrafters/public-conan/conan-xkbcommon%3Abincrafters/_latestVersion)|[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-conan-xkbcommon?svg=true)](https://ci.appveyor.com/project/bincrafters/conan-conan-xkbcommon)|[![Build Status](https://travis-ci.com/bincrafters/conan-conan-xkbcommon.svg)](https://travis-ci.com/bincrafters/conan-conan-xkbcommon)|
+| Linux & macOS |
+|:-----------------:|
+[![Build Status](https://travis-ci.com/bincrafters/conan-xkbcommon.svg)](https://travis-ci.com/bincrafters/conan-xkbcommon)|
 
 ## Conan Information
 
