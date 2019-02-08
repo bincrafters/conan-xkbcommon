@@ -100,15 +100,12 @@ class XkbcommonConan(ConanFile):
             defs={
                 "enable-wayland": self.options.with_wayland,
                 "enable-docs": self.options.docs,
-                "enable-x11": self.options.with_x11
+                "enable-x11": self.options.with_x11,
+                "libdir": os.path.join(self.package_folder, "lib"),
+                "default_library": ("shared" if self.options.shared else "static")
             },
             source_folder=self._source_subfolder,
-            build_folder=self._build_subfolder,
-            args=[
-                "--prefix=%s" % self.package_folder,
-                "--libdir=%s" % os.path.join(self.package_folder, "lib"),
-                "--default-library=%s" % ("shared" if self.options.shared else "static")
-            ])
+            build_folder=self._build_subfolder)
         return meson
 
     def build(self):
