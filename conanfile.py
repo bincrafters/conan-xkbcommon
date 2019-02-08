@@ -77,7 +77,8 @@ class XkbcommonConan(ConanFile):
 
         if pack_names:
             installer = tools.SystemPackageTool()
-            installer.install(" ".join(pack_names))
+            for item in pack_names:
+                installer.install(item)
 
     def build_requirements(self):
         if not tools.which("meson"):
