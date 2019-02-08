@@ -8,7 +8,7 @@ import os
 
 class XkbcommonConan(ConanFile):
     name = "xkbcommon"
-    version = "0.8.2"
+    version = "0.8.3"
     description = "keymap handling library for toolkits and window systems"
     topics = ("conan", "xkbcommon", "keyboard")
     url = "https://github.com/bincrafters/conan-xkbcommon"
@@ -18,12 +18,14 @@ class XkbcommonConan(ConanFile):
     exports = ["LICENSE.md"]
     settings = "os", "arch", "compiler", "build_type"
     options = {
+        "shared": [True, False],
         "fPIC": [True, False],
         "with_x11": [True, False],
         "with_wayland": [True, False],
         "docs": [True, False]
     }
     default_options = {
+        "shared": False,
         "fPIC": True,
         "with_x11": True,
         "with_wayland": False,
@@ -88,20 +90,25 @@ class XkbcommonConan(ConanFile):
 
     def source(self):
         tools.get("{0}/archive/xkbcommon-{1}.tar.gz".format(self.homepage, self.version),
-                  sha256="fd19874aefbcbc9da751292ba7abee8952405cd7d9042466e41a9c6ed3046322")
+                  sha256="aefea423f6f18422f0a80395f36404d9dbcbc45b881d3e70ceea95c623559069")
         extracted_dir = "libxkbcommon-" + self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
 
     def _configure_meson(self):
         meson = Meson(self)
-        meson.configure(defs={
-                            "enable-wayland": self.options.with_wayland,
-                            "enable-docs": self.options.docs,
-                            "enable-x11": self.options.with_x11,
-                            "libdir": os.path.join(self.package_folder, "lib")
-                        },
-                        source_folder=self._source_subfolder,
-                        build_folder=self._build_subfolder)
+        meson.configure(
+            defs={
+                "enable-wayland": self.options.with_wayland,
+                "enable-docs": self.options.docs,
+                "enable-x11": self.options.with_x11
+            },
+            source_folder=self._source_subfolder,
+            build_folder=self._build_subfolder,
+            args=[
+                "--prefix=%s" % self.package_folder,
+                "--libdir=%s" % os.path.join(self.package_folder, "lib"),
+                "--default-library=%s" % ("shared" if self.options.shared else "static")
+            ])
         return meson
 
     def build(self):
