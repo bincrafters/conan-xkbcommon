@@ -1,6 +1,5 @@
 env:
    global:
-     - CONAN_BUILD_REQUIRES="meson_installer/0.49.0@bincrafters/stable,bison/3.0.5@bincrafters/stable"
      - CONAN_DOCKER_32_IMAGES=1
 linux: &linux
    os: linux
