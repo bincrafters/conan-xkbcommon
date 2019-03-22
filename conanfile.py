@@ -8,7 +8,7 @@ import os
 
 class XkbcommonConan(ConanFile):
     name = "xkbcommon"
-    version = "0.8.3"
+    version = "0.8.4"
     description = "keymap handling library for toolkits and window systems"
     topics = ("conan", "xkbcommon", "keyboard")
     url = "https://github.com/bincrafters/conan-xkbcommon"
