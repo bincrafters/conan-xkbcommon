@@ -90,7 +90,7 @@ class XkbcommonConan(ConanFile):
 
     def source(self):
         tools.get("{0}/archive/xkbcommon-{1}.tar.gz".format(self.homepage, self.version),
-                  sha256="aefea423f6f18422f0a80395f36404d9dbcbc45b881d3e70ceea95c623559069")
+                  sha256="299b47558188017047354995f5882d43c2c8a60367df553319dcecebadb73e1d")
         extracted_dir = "libxkbcommon-" + self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
 
