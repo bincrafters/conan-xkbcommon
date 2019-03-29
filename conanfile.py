@@ -86,7 +86,7 @@ class XkbcommonConan(ConanFile):
         if not tools.which("meson"):
             self.build_requires("meson_installer/0.49.0@bincrafters/stable")
         if not tools.which("bison"):
-            self.build_requires("bison/3.0.5@bincrafters/stable")
+            self.build_requires("bison_installer/3.2.4@bincrafters/stable")
 
     def source(self):
         tools.get("{0}/archive/xkbcommon-{1}.tar.gz".format(self.homepage, self.version),
