@@ -38,6 +38,7 @@ class XkbcommonConan(ConanFile):
         if self.settings.os != "Linux":
             raise ConanInvalidConfiguration("This library is only compatible with Linux")
         del self.settings.compiler.libcxx
+        del self.settings.compiler.cppstd
 
     def _system_package_architecture(self):
         if not tools.cross_building(self.settings):
