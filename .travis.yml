@@ -1,7 +1,6 @@
 env:
    global:
      - CONAN_USE_DOCKER=1
-     - CONAN_DOCKER_32_IMAGES=1
 linux: &linux
    os: linux
    dist: xenial
@@ -12,53 +11,29 @@ linux: &linux
 matrix:
    include:
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=4.9 CONAN_ARCHS=x86_64
+        env: CONAN_GCC_VERSIONS=4.9
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=4.9 CONAN_ARCHS=x86
+        env: CONAN_GCC_VERSIONS=5
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=5 CONAN_ARCHS=x86_64
+        env: CONAN_GCC_VERSIONS=6
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=5 CONAN_ARCHS=x86
+        env: CONAN_GCC_VERSIONS=7
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=6 CONAN_ARCHS=x86_64
+        env: CONAN_GCC_VERSIONS=8
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=6 CONAN_ARCHS=x86
+        env: CONAN_GCC_VERSIONS=9
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=7 CONAN_ARCHS=x86_64
+        env: CONAN_CLANG_VERSIONS=3.9
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=7 CONAN_ARCHS=x86
+        env: CONAN_CLANG_VERSIONS=4.0
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=8 CONAN_ARCHS=x86_64
+        env: CONAN_CLANG_VERSIONS=5.0
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=8 CONAN_ARCHS=x86
+        env: CONAN_CLANG_VERSIONS=6.0
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=9 CONAN_ARCHS=x86_64
+        env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7
       - <<: *linux
-        env: CONAN_GCC_VERSIONS=9 CONAN_ARCHS=x86
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=3.9 CONAN_ARCHS=x86_64
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=3.9 CONAN_ARCHS=x86
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=4.0 CONAN_ARCHS=x86_64
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=4.0 CONAN_ARCHS=x86
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=5.0 CONAN_ARCHS=x86_64
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=5.0 CONAN_ARCHS=x86
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=6.0 CONAN_ARCHS=x86_64
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=6.0 CONAN_ARCHS=x86
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7 CONAN_ARCHS=x86_64
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7-x86 CONAN_ARCHS=x86
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=8 CONAN_ARCHS=x86_64
-      - <<: *linux
-        env: CONAN_CLANG_VERSIONS=8 CONAN_ARCHS=x86
+        env: CONAN_CLANG_VERSIONS=8
 
 install:
   - chmod +x .ci/install.sh

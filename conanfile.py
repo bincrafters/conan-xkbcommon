@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from conans import ConanFile, Meson, tools
 from conans.errors import ConanInvalidConfiguration
 import os
@@ -85,7 +82,7 @@ class XkbcommonConan(ConanFile):
 
     def build_requirements(self):
         if not tools.which("meson"):
-            self.build_requires("meson_installer/0.49.0@bincrafters/stable")
+            self.build_requires("meson/0.52.0")
         if not tools.which("bison"):
             self.build_requires("bison_installer/3.2.4@bincrafters/stable")
 
