@@ -1,6 +1,7 @@
 from conans import ConanFile, Meson, tools
 from conans.errors import ConanInvalidConfiguration
 import os
+import shutil
 
 
 class XkbcommonConan(ConanFile):
@@ -25,7 +26,8 @@ class XkbcommonConan(ConanFile):
         "fPIC": True,
         "with_x11": True,
         "with_wayland": False,
-        "docs": False
+        "docs": False,
+        "libxcb:shared": True
     }
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
@@ -36,54 +38,15 @@ class XkbcommonConan(ConanFile):
         del self.settings.compiler.libcxx
         del self.settings.compiler.cppstd
 
-    def _system_package_architecture(self):
-        if not tools.cross_building(self.settings):
-            return ""
-
-        if tools.os_info.with_apt:
-            if self.settings.arch == "x86":
-                return ":i386"
-            elif self.settings.arch == "x86_64":
-                return ":amd64"
-            elif self.settings.arch == "armv6" or self.settings.arch == "armv7":
-                return ":armel"
-            elif self.settings.arch == "armv7hf":
-                return ":armhf"
-            elif self.settings.arch == "armv8":
-                return ":arm64"
-
-        if tools.os_info.with_yum:
-            if self.settings.arch == "x86":
-                return ".i686"
-            elif self.settings.arch == "x86_64":
-                return ".x86_64"
-        return ""
-
-    def _system_package_name(self, package):
-        return package + self._system_package_architecture()
-
-    def system_requirements(self):
-        pack_names = []
-        if tools.os_info.with_apt:
-            pack_names.append(self._system_package_name("xkb-data"))
-            if self.options.with_x11:
-                pack_names.extend([self._system_package_name("libxcb-xkb-dev"),
-                                   self._system_package_name("libxcb1-dev")])
-        elif tools.os_info.with_yum:
-            pack_names.append(self._system_package_name("xkeyboard-config"))
-            if self.options.with_x11:
-                pack_names.append(self._system_package_name("libxcb-devel"))
-
-        if pack_names:
-            installer = tools.SystemPackageTool()
-            for item in pack_names:
-                installer.install(item)
-
     def build_requirements(self):
         if not tools.which("meson"):
             self.build_requires("meson/0.52.0")
         if not tools.which("bison"):
             self.build_requires("bison_installer/3.2.4@bincrafters/stable")
+
+    def requirements(self):
+        if self.options.with_x11:
+            self.requires("libxcb/1.13.1@bincrafters/stable")
 
     def source(self):
         tools.get("{0}/archive/xkbcommon-{1}.tar.gz".format(self.homepage, self.version),
@@ -106,6 +69,17 @@ class XkbcommonConan(ConanFile):
         return meson
 
     def build(self):
+        def _get_pc_files(package):
+            if package in self.deps_cpp_info.deps:
+                lib_path = self.deps_cpp_info[package].rootpath
+                for dirpath, _, filenames in os.walk(lib_path):
+                    for filename in filenames:
+                        if filename.endswith('.pc'):
+                            shutil.copyfile(os.path.join(dirpath, filename), filename)
+                            tools.replace_prefix_in_pc_file(filename, lib_path)
+                for dep in self.deps_cpp_info[package].public_deps:
+                    _get_pc_files(dep)
+        _get_pc_files('libxcb')
         meson = self._configure_meson()
         meson.build()
 
@@ -113,6 +87,7 @@ class XkbcommonConan(ConanFile):
         self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
         meson = self._configure_meson()
         meson.install()
+        os.makedirs(os.path.join(self.package_folder, "share", "X11", "xkb"))
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
