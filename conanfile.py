@@ -10,7 +10,6 @@ class XkbcommonConan(ConanFile):
     topics = ("conan", "xkbcommon", "keyboard")
     url = "https://github.com/bincrafters/conan-xkbcommon"
     homepage = "https://github.com/xkbcommon/libxkbcommon"
-    author = "Bincrafters <bincrafters@gmail.com>"
     license = "MIT"
     exports = ["LICENSE.md"]
     settings = "os", "arch", "compiler", "build_type"
