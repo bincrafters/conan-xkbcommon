@@ -6,7 +6,6 @@ import shutil
 
 class XkbcommonConan(ConanFile):
     name = "xkbcommon"
-    version = "0.8.4"
     description = "keymap handling library for toolkits and window systems"
     topics = ("conan", "xkbcommon", "keyboard")
     url = "https://github.com/bincrafters/conan-xkbcommon"
@@ -49,8 +48,7 @@ class XkbcommonConan(ConanFile):
             self.requires("libxcb/1.13.1@bincrafters/stable")
 
     def source(self):
-        tools.get("{0}/archive/xkbcommon-{1}.tar.gz".format(self.homepage, self.version),
-                  sha256="299b47558188017047354995f5882d43c2c8a60367df553319dcecebadb73e1d")
+        tools.get(**self.conan_data["sources"][self.version])
         extracted_dir = "libxkbcommon-" + self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
 
