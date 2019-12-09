@@ -45,6 +45,7 @@ class XkbcommonConan(ConanFile):
             self.build_requires("bison_installer/3.2.4@bincrafters/stable")
 
     def requirements(self):
+        self.requires("xkeyboard-config/2.28@bincrafters/stable")
         if self.options.with_x11:
             self.requires("libxcb/1.13.1@bincrafters/stable")
 
@@ -80,6 +81,7 @@ class XkbcommonConan(ConanFile):
                 for dep in self.deps_cpp_info[package].public_deps:
                     _get_pc_files(dep)
         _get_pc_files('libxcb')
+        _get_pc_files('xkeyboard-config')
         meson = self._configure_meson()
         meson.build()
 
@@ -87,7 +89,6 @@ class XkbcommonConan(ConanFile):
         self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
         meson = self._configure_meson()
         meson.install()
-        os.makedirs(os.path.join(self.package_folder, "share", "X11", "xkb"))
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
