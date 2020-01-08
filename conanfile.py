@@ -39,7 +39,7 @@ class XkbcommonConan(ConanFile):
 
     def build_requirements(self):
         if not tools.which("meson"):
-            self.build_requires("meson/0.52.0")
+            self.build_requires("meson/0.53.0")
         if not tools.which("bison"):
             self.build_requires("bison_installer/3.2.4@bincrafters/stable")
 
