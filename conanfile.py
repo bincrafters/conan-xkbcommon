@@ -42,6 +42,8 @@ class XkbcommonConan(ConanFile):
             self.build_requires("meson/0.53.0")
         if not tools.which("bison"):
             self.build_requires("bison_installer/3.2.4@bincrafters/stable")
+        if not tools.which("pkg-config"):
+            self.build_requires("pkg-config_installer/0.29.2@bincrafters/stable")
 
     def requirements(self):
         self.requires("xkeyboard-config/2.28@bincrafters/stable")
