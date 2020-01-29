@@ -90,6 +90,3 @@ class XkbcommonConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
-        if self.options.with_x11:
-            self.cpp_info.libs.append("xcb")
-            self.cpp_info.libs.append("xcb-xkb")
