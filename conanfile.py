@@ -21,7 +21,7 @@ class XkbcommonConan(ConanFile):
         "docs": [True, False]
     }
     default_options = {
-        "shared": False,
+        "shared": True,
         "fPIC": True,
         "with_x11": True,
         "with_wayland": False,
