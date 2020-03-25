@@ -11,7 +11,6 @@ class XkbcommonConan(ConanFile):
     url = "https://github.com/bincrafters/conan-xkbcommon"
     homepage = "https://github.com/xkbcommon/libxkbcommon"
     license = "MIT"
-    exports = ["LICENSE.md"]
     settings = "os", "arch", "compiler", "build_type"
     options = {
         "shared": [True, False],
