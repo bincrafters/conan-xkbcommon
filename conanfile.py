@@ -11,7 +11,6 @@ class XkbcommonConan(ConanFile):
     url = "https://github.com/bincrafters/conan-xkbcommon"
     homepage = "https://github.com/xkbcommon/libxkbcommon"
     license = "MIT"
-    exports = ["LICENSE.md"]
     settings = "os", "arch", "compiler", "build_type"
     options = {
         "shared": [True, False],
@@ -25,9 +24,9 @@ class XkbcommonConan(ConanFile):
         "fPIC": True,
         "with_x11": True,
         "with_wayland": False,
-        "docs": False,
-        "libxcb:shared": True
+        "docs": False
     }
+    exports = '*.diff'
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
 
@@ -39,7 +38,7 @@ class XkbcommonConan(ConanFile):
 
     def build_requirements(self):
         if not tools.which("meson"):
-            self.build_requires("meson/0.53.0")
+            self.build_requires("meson/0.53.2")
         if not tools.which("bison"):
             self.build_requires("bison_installer/3.2.4@bincrafters/stable")
         if not tools.which("pkg-config"):
@@ -54,19 +53,24 @@ class XkbcommonConan(ConanFile):
         tools.get(**self.conan_data["sources"][self.version])
         extracted_dir = "libxkbcommon-" + self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
+        tools.patch(base_path=self._source_subfolder, patch_file='option_use-static.diff')
 
     def _configure_meson(self):
+        defs={
+            "enable-wayland": self.options.with_wayland,
+            "enable-docs": self.options.docs,
+            "enable-x11": self.options.with_x11,
+            "libdir": os.path.join(self.package_folder, "lib"),
+            "default_library": ("shared" if self.options.shared else "static")}
+        if self.options.with_x11:
+            defs["use-static-xcb"] = ("false" if self.options["libxcb"].shared else "true")
+
         meson = Meson(self)
         meson.configure(
-            defs={
-                "enable-wayland": self.options.with_wayland,
-                "enable-docs": self.options.docs,
-                "enable-x11": self.options.with_x11,
-                "libdir": os.path.join(self.package_folder, "lib"),
-                "default_library": ("shared" if self.options.shared else "static")
-            },
+            defs=defs,
             source_folder=self._source_subfolder,
-            build_folder=self._build_subfolder)
+            build_folder=self._build_subfolder,
+            pkg_config_paths=self.build_folder)
         return meson
 
     def build(self):
