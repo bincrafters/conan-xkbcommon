@@ -26,7 +26,6 @@ class XkbcommonConan(ConanFile):
         "with_wayland": False,
         "docs": False
     }
-    exports = '*.diff'
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
 
@@ -45,15 +44,12 @@ class XkbcommonConan(ConanFile):
             self.build_requires("pkg-config_installer/0.29.2@bincrafters/stable")
 
     def requirements(self):
-        self.requires("xkeyboard-config/2.28@bincrafters/stable")
-        if self.options.with_x11:
-            self.requires("libxcb/1.13.1@bincrafters/stable")
+        self.requires("xorg/system")
 
     def source(self):
         tools.get(**self.conan_data["sources"][self.version])
         extracted_dir = "libxkbcommon-" + self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
-        tools.patch(base_path=self._source_subfolder, patch_file='option_use-static.diff')
 
     def _configure_meson(self):
         defs={
@@ -62,8 +58,6 @@ class XkbcommonConan(ConanFile):
             "enable-x11": self.options.with_x11,
             "libdir": os.path.join(self.package_folder, "lib"),
             "default_library": ("shared" if self.options.shared else "static")}
-        if self.options.with_x11:
-            defs["use-static-xcb"] = ("false" if self.options["libxcb"].shared else "true")
 
         meson = Meson(self)
         meson.configure(
@@ -74,18 +68,6 @@ class XkbcommonConan(ConanFile):
         return meson
 
     def build(self):
-        def _get_pc_files(package):
-            if package in self.deps_cpp_info.deps:
-                lib_path = self.deps_cpp_info[package].rootpath
-                for dirpath, _, filenames in os.walk(lib_path):
-                    for filename in filenames:
-                        if filename.endswith('.pc'):
-                            shutil.copyfile(os.path.join(dirpath, filename), filename)
-                            tools.replace_prefix_in_pc_file(filename, lib_path)
-                for dep in self.deps_cpp_info[package].public_deps:
-                    _get_pc_files(dep)
-        _get_pc_files('libxcb')
-        _get_pc_files('xkeyboard-config')
         meson = self._configure_meson()
         meson.build()
 
